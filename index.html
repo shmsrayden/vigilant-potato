@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rock Paper Scissors</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(to right, #4b6cb7, #182848);
+        }
+        .btn-game {
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .btn-game:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+        .result-message.win {
+            color: #4ade80;
+        }
+        .result-message.lose {
+            color: #f87171;
+        }
+        .result-message.draw {
+            color: #facc15;
+        }
+        .popup-modal {
+            transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+            transform: scale(0.95);
+            opacity: 0;
+            pointer-events: none;
+        }
+        .popup-modal.show {
+            transform: scale(1);
+            opacity: 1;
+            pointer-events: auto;
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-white min-h-screen flex flex-col items-center justify-center p-4">
+    <div class="container mx-auto p-6 bg-gray-800 rounded-3xl shadow-xl max-w-lg w-full flex flex-col items-center">
+        <h1 class="text-4xl font-bold mb-6 text-center text-teal-400">Rock Paper Scissors</h1>
+        <div class="w-full flex justify-around mb-8 space-x-4">
+            <button id="rock" class="btn-game bg-gray-700 text-teal-300 p-8 rounded-full shadow-lg hover:bg-teal-600 hover:text-white transform transition duration-300 ease-in-out">
+                <i class="fas fa-hand-rock text-5xl"></i>
+            </button>
+            <button id="paper" class="btn-game bg-gray-700 text-teal-300 p-8 rounded-full shadow-lg hover:bg-teal-600 hover:text-white transform transition duration-300 ease-in-out">
+                <i class="fas fa-hand-paper text-5xl"></i>
+            </button>
+            <button id="scissors" class="btn-game bg-gray-700 text-teal-300 p-8 rounded-full shadow-lg hover:bg-teal-600 hover:text-white transform transition duration-300 ease-in-out">
+                <i class="fas fa-hand-scissors text-5xl"></i>
+            </button>
+        </div>
+
+        <div class="bg-gray-700 p-6 rounded-2xl w-full max-w-sm text-center shadow-inner">
+            <div class="flex justify-between items-center mb-4">
+                <div class="flex-1 text-center">
+                    <p class="text-lg font-semibold text-gray-300">Player</p>
+                    <p id="player-choice" class="text-3xl font-bold text-yellow-300 mt-2">?</p>
+                </div>
+                <div class="text-4xl mx-4 font-extrabold text-teal-400">VS</div>
+                <div class="flex-1 text-center">
+                    <p class="text-lg font-semibold text-gray-300">Computer</p>
+                    <p id="computer-choice" class="text-3xl font-bold text-red-300 mt-2">?</p>
+                </div>
+            </div>
+            <div id="result-text" class="text-2xl font-bold mt-4 result-message">Choose your weapon!</div>
+        </div>
+
+        <div class="flex flex-col items-center mt-6 w-full max-w-sm">
+            <div class="flex justify-between w-full mb-4">
+                <div class="text-center">
+                    <p class="text-xl font-bold text-gray-300">Player Score</p>
+                    <p id="player-score" class="text-4xl font-extrabold text-white">0</p>
+                </div>
+                <div class="text-center">
+                    <p class="text-xl font-bold text-gray-300">Computer Score</p>
+                    <p id="computer-score" class="text-4xl font-extrabold text-white">0</p>
+                </div>
+            </div>
+            <button id="reset-button" class="bg-red-500 text-white font-bold py-3 px-6 rounded-full shadow-lg hover:bg-red-600 transform transition duration-300 ease-in-out w-full">Reset Game</button>
+        </div>
+    </div>
+
+    <div id="alert-modal" class="fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center p-4 z-50 popup-modal">
+        <div class="bg-gray-800 p-8 rounded-2xl shadow-2xl max-w-sm w-full text-center transform scale-95 transition-transform">
+            <h3 id="alert-title" class="text-2xl font-bold text-teal-400 mb-4"></h3>
+            <p id="alert-message" class="text-gray-300 mb-6"></p>
+            <button id="alert-ok-button" class="bg-teal-500 text-white font-bold py-2 px-6 rounded-full hover:bg-teal-600 transition-colors">OK</button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const rockBtn = document.getElementById('rock');
+            const paperBtn = document.getElementById('paper');
+            const scissorsBtn = document.getElementById('scissors');
+            const resetBtn = document.getElementById('reset-button');
+            const playerChoiceDisplay = document.getElementById('player-choice');
+            const computerChoiceDisplay = document.getElementById('computer-choice');
+            const resultText = document.getElementById('result-text');
+            const playerScoreDisplay = document.getElementById('player-score');
+            const computerScoreDisplay = document.getElementById('computer-score');
+
+            const alertModal = document.getElementById('alert-modal');
+            const alertTitle = document.getElementById('alert-title');
+            const alertMessage = document.getElementById('alert-message');
+            const alertOkBtn = document.getElementById('alert-ok-button');
+
+            const choices = ['rock', 'paper', 'scissors'];
+            const choiceIcons = {
+                'rock': '<i class="fas fa-hand-rock text-5xl"></i>',
+                'paper': '<i class="fas fa-hand-paper text-5xl"></i>',
+                'scissors': '<i class="fas fa-hand-scissors text-5xl"></i>'
+            };
+            let playerScore = 0;
+            let computerScore = 0;
+            const winningScore = 5;
+
+            const showAlert = (title, message) => {
+                alertTitle.textContent = title;
+                alertMessage.textContent = message;
+                alertModal.classList.add('show');
+            };
+
+            const hideAlert = () => {
+                alertModal.classList.remove('show');
+            };
+            
+            alertOkBtn.addEventListener('click', hideAlert);
+
+            const getComputerChoice = () => {
+                const randomIndex = Math.floor(Math.random() * choices.length);
+                return choices[randomIndex];
+            };
+
+            const getResult = (playerChoice, computerChoice) => {
+                if (playerChoice === computerChoice) {
+                    return 'draw';
+                }
+                if (
+                    (playerChoice === 'rock' && computerChoice === 'scissors') ||
+                    (playerChoice === 'paper' && computerChoice === 'rock') ||
+                    (playerChoice === 'scissors' && computerChoice === 'paper')
+                ) {
+                    return 'win';
+                }
+                return 'lose';
+            };
+
+            const updateGame = (playerChoice, computerChoice, result) => {
+                playerChoiceDisplay.innerHTML = choiceIcons[playerChoice];
+                computerChoiceDisplay.innerHTML = choiceIcons[computerChoice];
+
+                resultText.className = 'text-2xl font-bold mt-4';
+                if (result === 'win') {
+                    playerScore++;
+                    resultText.textContent = 'You Win!';
+                    resultText.classList.add('win');
+                } else if (result === 'lose') {
+                    computerScore++;
+                    resultText.textContent = 'You Lose!';
+                    resultText.classList.add('lose');
+                } else {
+                    resultText.textContent = 'It\'s a Draw!';
+                    resultText.classList.add('draw');
+                }
+
+                playerScoreDisplay.textContent = playerScore;
+                computerScoreDisplay.textContent = computerScore;
+
+                if (playerScore >= winningScore) {
+                    showAlert('Game Over!', 'Congratulations! You won the game!');
+                } else if (computerScore >= winningScore) {
+                    showAlert('Game Over!', 'The computer won the game. Better luck next time!');
+                }
+            };
+
+            const playGame = (playerChoice) => {
+                if (playerScore >= winningScore || computerScore >= winningScore) {
+                    showAlert('Game Over', 'The game has already ended. Please reset to play again.');
+                    return;
+                }
+                const computerChoice = getComputerChoice();
+                const result = getResult(playerChoice, computerChoice);
+                updateGame(playerChoice, computerChoice, result);
+            };
+
+            const resetGame = () => {
+                playerScore = 0;
+                computerScore = 0;
+                playerScoreDisplay.textContent = '0';
+                computerChoiceDisplay.textContent = '0';
+                playerChoiceDisplay.textContent = '?';
+                computerChoiceDisplay.textContent = '?';
+                resultText.textContent = 'Choose your weapon!';
+                resultText.className = 'text-2xl font-bold mt-4';
+            };
+
+            rockBtn.addEventListener('click', () => playGame('rock'));
+            paperBtn.addEventListener('click', () => playGame('paper'));
+            scissorsBtn.addEventListener('click', () => playGame('scissors'));
+            resetBtn.addEventListener('click', resetGame);
+        });
+    </script>
+</body>
+</html>
