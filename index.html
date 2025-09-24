@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rock Paper Scissors</title>
+    <title>rock paper scissors(off brand)</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -45,7 +45,7 @@
 </head>
 <body class="bg-gray-900 text-white min-h-screen flex flex-col items-center justify-center p-4">
     <div class="container mx-auto p-6 bg-gray-800 rounded-3xl shadow-xl max-w-lg w-full flex flex-col items-center">
-        <h1 class="text-4xl font-bold mb-6 text-center text-teal-400">Rock Paper Scissors</h1>
+        <h1 class="text-4xl font-bold mb-6 text-center text-teal-400">rock paper scissors</h1>
         <div class="w-full flex justify-around mb-8 space-x-4">
             <button id="rock" class="btn-game bg-gray-700 text-teal-300 p-8 rounded-full shadow-lg hover:bg-teal-600 hover:text-white transform transition duration-300 ease-in-out">
                 <i class="fas fa-hand-rock text-5xl"></i>
@@ -61,30 +61,30 @@
         <div class="bg-gray-700 p-6 rounded-2xl w-full max-w-sm text-center shadow-inner">
             <div class="flex justify-between items-center mb-4">
                 <div class="flex-1 text-center">
-                    <p class="text-lg font-semibold text-gray-300">Player</p>
+                    <p class="text-lg font-semibold text-gray-300">person</p>
                     <p id="player-choice" class="text-3xl font-bold text-yellow-300 mt-2">?</p>
                 </div>
                 <div class="text-4xl mx-4 font-extrabold text-teal-400">VS</div>
                 <div class="flex-1 text-center">
-                    <p class="text-lg font-semibold text-gray-300">Computer</p>
+                    <p class="text-lg font-semibold text-gray-300">ai</p>
                     <p id="computer-choice" class="text-3xl font-bold text-red-300 mt-2">?</p>
                 </div>
             </div>
-            <div id="result-text" class="text-2xl font-bold mt-4 result-message">Choose your weapon!</div>
+            <div id="result-text" class="text-2xl font-bold mt-4 result-message">choose</div>
         </div>
 
         <div class="flex flex-col items-center mt-6 w-full max-w-sm">
             <div class="flex justify-between w-full mb-4">
                 <div class="text-center">
-                    <p class="text-xl font-bold text-gray-300">Player Score</p>
+                    <p class="text-xl font-bold text-gray-300">ur score</p>
                     <p id="player-score" class="text-4xl font-extrabold text-white">0</p>
                 </div>
                 <div class="text-center">
-                    <p class="text-xl font-bold text-gray-300">Computer Score</p>
+                    <p class="text-xl font-bold text-gray-300">ai score</p>
                     <p id="computer-score" class="text-4xl font-extrabold text-white">0</p>
                 </div>
             </div>
-            <button id="reset-button" class="bg-red-500 text-white font-bold py-3 px-6 rounded-full shadow-lg hover:bg-red-600 transform transition duration-300 ease-in-out w-full">Reset Game</button>
+            <button id="reset-button" class="bg-red-500 text-white font-bold py-3 px-6 rounded-full shadow-lg hover:bg-red-600 transform transition duration-300 ease-in-out w-full">reset game</button>
         </div>
     </div>
 
@@ -176,15 +176,15 @@
                 computerScoreDisplay.textContent = computerScore;
 
                 if (playerScore >= winningScore) {
-                    showAlert('Game Over!', 'Congratulations! You won the game!');
+                    showAlert('game over', 'congrats u won!');
                 } else if (computerScore >= winningScore) {
-                    showAlert('Game Over!', 'The computer won the game. Better luck next time!');
+                    showAlert('game over', 'ai won, lock in twin');
                 }
             };
 
             const playGame = (playerChoice) => {
                 if (playerScore >= winningScore || computerScore >= winningScore) {
-                    showAlert('Game Over', 'The game has already ended. Please reset to play again.');
+                    showAlert('game over', 'it already ended reset');
                     return;
                 }
                 const computerChoice = getComputerChoice();
@@ -199,7 +199,7 @@
                 computerChoiceDisplay.textContent = '0';
                 playerChoiceDisplay.textContent = '?';
                 computerChoiceDisplay.textContent = '?';
-                resultText.textContent = 'Choose your weapon!';
+                resultText.textContent = 'choose';
                 resultText.className = 'text-2xl font-bold mt-4';
             };
 
